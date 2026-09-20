@@ -1,134 +1,157 @@
-# Math Modeling Pro（数学建模竞赛全流程强化版 Skill）
+# Math Modeling Pro
 
-[![Skill](https://img.shields.io/badge/Agent-Skill-blueviolet)](https://github.com/) [![LaTeX](https://img.shields.io/badge/LaTeX-cumcmthesis-green)](templates/cumcmthesis/) [![Python](https://img.shields.io/badge/Python-%E2%89%A53.10-blue)](scripts/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+> 一套**自包含**的数学建模竞赛 skill：把「读题 → 交付」拆成 **11 个阶段**，并用 **8 条硬门禁**卡住质量下限。
+> 模板、脚本、子技能全部随包分发，克隆下来即可用，不依赖任何外部技能。
 
-一个面向**数学建模竞赛**（国赛 CUMCM / 美赛 MCM-ICM / 校赛 / 企业赛 / 研究生赛等，不限定特定赛事）的**自包含 Agent Skill**：把从「读题拆解」到「论文交付」的完整流程标准化为 11 个阶段，并内置 **8 条硬门禁**。每条规则都来自真实竞赛与真实工程中被评审纠正过的教训，可直接加载到 Claude Code / Codex / WorkBuddy 等 agentic 编码工具中使用。
+适用赛事：国赛 CUMCM、美赛 MCM / ICM、校赛、企业赛、研究生赛——不绑定特定赛事。
 
-本 skill 由两套来源融合而成：一套**自包含全流程能力包**（读题→建模→求解→可视化→写作→审稿，含模板/脚本/子技能），一套**门控式工作流**（强制基线对比、独立数据挖掘、独立测试集、文献核验、数值冻结）。融合后保留了前者的全部可执行细节与资源，补齐了后者的方法论硬约束，且**不依赖任何外部技能**。
+---
 
-## ✨ 核心特性
+## 为什么需要它
 
-- **读题拆解**：赛题文件多模态解析、附件数据结构探查、按 Q1..Qn 拆题并判定问题类型
-- **独立数据挖掘章**：强制独立成章，覆盖字段字典 / 缺失离群 / 分布 / 相关共线 / 分组差异 / 时序轨迹 / 特征工程与防泄漏七项，结论必须指向建模选择
-- **方案选择**：大道至简偏好序（机理模型优先）、每问 2–3 个差异化候选 + 一个真实可比基线
-- **代码实现**：防伪数据红线、绝对路径读真实文件、Search-Replace 增量纠错、可复现清单、**数值冻结**
-- **独立检验**：按独立单元划分训练/验证/测试，最终指标只来自**独立测试集**；数据泄露六条自查、失败样本分析
-- **可视化**：nature / science / IEEE 三套学术配色、八大绘图类型选择指南、宋体 + Times、TikZ 蛇形流程图、论文总体架构图
-- **文献门**：先建库再写作，字段完整、DOI 可解析、键值引用、交稿前逐条核验
-- **论文写作**：cumcmthesis 模板（离线 cls 自带）、摘要约 80% 版心、每问 ≥10 处公式推导、图表排版硬规范、正文 21–30 页
-- **审稿修改**：九维评审 + 八门禁复检、三级问题清单、版面逐页视觉审查、图片乱码三道关、修复循环
-- **自动化体检**：`check_gates.py`（工程结构/门禁）+ `check_layout.py`（版面六项），交付前一键扫描
-- **降 AI 味**：论文读起来像资深参赛者手写，反模式清单见 `references/writing.md` §5
+数学建模的难点往往不在「会不会建模」，而在**下限守不住**。翻车通常发生在这些地方：
 
-## 🚪 八条硬门禁
+- 只有一个主方法，没有基线，结论好或坏都无从判断；
+- 数据挖掘散落在各问里，看不出数据究竟告诉建模什么；
+- 最终指标来自训练集，没有独立测试集，泛化能力无从谈起；
+- 参考文献随手凑，评委抽查一条就露馅；
+- 论文里的数字和代码跑出来的对不上。
 
-| # | 门禁 | 等级 | 一句话要求 |
-|---|---|---|---|
-| G1 | 基线对比 | 一致性级 | 每问一张"基线 vs 主方法 vs 备选"表，基线真实可比 |
-| G2 | 独立数据挖掘 | 缺失整章→红线级 | 独立成章，七项内容齐全，结论指向建模 |
-| G3 | 独立测试集 | **红线级** | 最终指标只来自独立测试集，按独立单元划分 |
-| G4 | 数据泄露 | **红线级** | 时序只用过去、特征不用事后信息、只在训练集 fit |
-| G5 | 文献 | 编造→红线级 | 先建库、字段完整、DOI 可解析、键值引用 |
-| G6 | 数值冻结 | **红线级** | 正文数字全部来自冻结结果文件 |
-| G7 | 代码可复现 | 一致性级 | 种子/依赖/路径固定，附录代码=交付代码 |
-| G8 | 版面 | 页数超限→红线级 | 图表就近、说明 100–150 字、占比 ≤2/3、21–30 页、无乱码 |
+Math Modeling Pro 的思路是：**保留完整的全流程能力**（读题 / 建模 / 求解 / 可视化 / 写作 / 审稿），同时把上面这些短板固化成**不可跳过的门禁**。门禁不通过，就不算完成。
 
-## 📁 目录结构
+## 八条硬门禁
+
+| 编号 | 门禁 | 级别 | 卡的是什么 |
+|:--:|---|---|---|
+| G1 | 基线对比 | 一致性级 | 每问一张「基线 vs 主方法 vs 备选」表，基线必须真实可比，禁用玩具基线 |
+| G2 | 独立数据挖掘 | 缺整章 → 红线 | 数据挖掘独立成章，七项齐全，结论必须指向建模选择 |
+| G3 | 独立测试集 | **红线** | 分类/预测/回归的主指标只能来自独立测试集，按独立单元划分 |
+| G4 | 数据泄露 | **红线** | 时序只用过去、特征不用事后信息、标准化只在训练集 fit |
+| G5 | 文献核验 | 编造 → 红线 | 先建库再写作，DOI 可解析，正文全部键值引用 |
+| G6 | 数值冻结 | **红线** | 正文数字全部可溯源到冻结结果文件，写作期间不改数 |
+| G7 | 代码可复现 | 一致性级 | 种子 / 依赖 / 路径固定，附录代码 = 交付代码 |
+| G8 | 版面 | 超页 → 红线 | 图表就近、说明 100–150 字、单页占比 ≤2/3、正文 21–30 页、无乱码 |
+
+任一条不过 → 进入修复循环，修完重跑全清单。**不允许「先交稿再补」。**
+
+## 工作流：11 个阶段
+
+```
+0 环境自检 → 1 读题拆解 → 2 数据挖掘 → 3 方案建模 → 4 代码求解
+           → 5 独立检验 → 6 可视化 → 7 文献库 → 8 论文写作 → 9 审稿修改 → 10 交付
+```
+
+每个阶段的输入、产物、检查点写在 `SKILL.md`；详细规范分散在下面这些文档里，按阶段查即可，不必全读。
+
+| 阶段 | 对应文档 | 里面有什么 |
+|:--:|---|---|
+| 1 读题拆解 | `references/parsing.md` | 多格式解析协议、图片多模态识别、数据探查脚本、拆题 JSON |
+| 2 数据挖掘 | `references/data-mining.md` | 七项内容清单、EDA 脚本骨架、「发现 → 影响」结论写法 |
+| 3 方案建模 | `references/modeling.md` | 大道至简偏好序、候选方案、**基线对比门**、优化模型完整形式 |
+| 4 代码求解 | `references/coding.md` | 防伪数据红线、Search-Replace 增量纠错、**数值冻结** |
+| 5 独立检验 | `references/validation.md` | **独立测试集门**、数据泄露自查、模型检验章七项、失败样本分析 |
+| 6 可视化 | `references/visualization.md` | 三套学术配色、八大绘图类型、字体配方、TikZ 流程图、命名规范 |
+| 7 文献库 | `references/literature.md` | 文献门五条约束、库格式、检索与 DOI 核验来源 |
+| 8 论文写作 | `references/writing.md` | 结构骨架、各部分长度、摘要规则、图表排版硬规范、降 AI 味 |
+| 9 审稿修改 | `references/review.md` | 九维评审、八门禁复检、三级问题清单、逐页视觉审查、评分表 |
+
+> 时间紧只读一份的话，读 `references/review.md`。
+
+## 目录结构
 
 ```
 math-modeling-pro/
-├── SKILL.md                          # Skill 主入口：核心理念 + 八门禁 + 11 阶段工作流
-├── references/
-│   ├── parsing.md                    # 读题协议、数据探查、拆题 JSON
-│   ├── data-mining.md                # 【新增】独立数据挖掘章七项、EDA 脚本骨架
-│   ├── modeling.md                   # 大道至简偏好序、候选方案、基线对比门、优化模型完整形式
-│   ├── coding.md                     # 防伪数据红线、Search-Replace 纠错、数值冻结门
-│   ├── validation.md                 # 【新增】独立测试集门、数据泄露自查、模型检验章七项
-│   ├── literature.md                 # 【新增】文献门、文献库格式、检索与 DOI 核验来源
-│   ├── visualization.md              # 三套配色、八大图型、TikZ 蛇形流程图、图片命名
-│   ├── writing.md                    # 结构骨架（含数据挖掘章/模型检验章）、摘要规则、排版硬规范
-│   └── review.md                     # 九维评审、八门禁复检、三级问题清单、版面视觉审查
+├── SKILL.md                      # 主入口：核心理念 + 八门禁 + 11 阶段工作流
+├── references/                   # 分阶段详细规范（9 份）
+│   ├── parsing.md                #   读题与拆解
+│   ├── data-mining.md            #   独立数据挖掘章
+│   ├── modeling.md               #   方案选择与建模（含基线门）
+│   ├── coding.md                 #   代码实现与求解（含数值冻结）
+│   ├── validation.md             #   独立检验与稳健性
+│   ├── visualization.md          #   可视化规范
+│   ├── literature.md             #   文献管理与核验
+│   ├── writing.md                #   论文写作规范
+│   └── review.md                 #   审稿与修改
+├── scripts/
+│   ├── check_gates.py            # 门禁自检：工程结构 + G1–G7
+│   └── check_layout.py           # 版面体检：占比/图挨图/说明字数/就近/乱码/页数
 ├── skills/
-│   └── tikz-architecture-diagram/    # 子技能：论文总体架构图（分层架构 TikZ 画法）
+│   └── tikz-architecture-diagram/ # 子技能：论文总体架构图（分层架构 TikZ）
 ├── templates/
-│   ├── cumcmthesis/cumcmthesis.cls   # cumcmthesis v2.9 离线副本（xelatex 编译兜底）
-│   └── flow_snake.tex                # 蛇形流程图 TikZ 模板
-└── scripts/
-    ├── check_gates.py                # 【新增】门禁自检（工程结构 + G1–G7）
-    └── check_layout.py               # 交付前版面自动体检（六项违规报行号）
+│   ├── cumcmthesis/cumcmthesis.cls # 官方类文件离线副本（编译兜底）
+│   └── flow_snake.tex             # 各问解题流程图（蛇形横向 TikZ）
+├── README.md
+└── LICENSE
 ```
 
-## 🚀 快速开始
-
-### 1. 环境依赖
-
-- Python ≥ 3.10（`pandas`、`openpyxl`、`matplotlib`、`pdfplumber`；版面体检另需 `pymupdf`）
-- TeX Live / CTeX（`xelatex` + `cumcmthesis`，仓库已带离线 cls 兜底）
-- 建议 `kpsewhich cumcmthesis.cls` 检查系统是否已装，未装则把 `templates/cumcmthesis/cumcmthesis.cls` 复制到论文目录
-
-### 2. 安装为 Agent Skill
+## 安装
 
 ```bash
-# 个人级（全项目可用）
-cp -r math-modeling-pro ~/.claude/skills/          # Claude Code
-cp -r math-modeling-pro ~/.workbuddy-ai/skills/    # WorkBuddy
-# 项目级（仅当前项目）
-cp -r math-modeling-pro <workspace>/.workbuddy-ai/skills/
+# 个人级：所有项目可用
+git clone https://github.com/Voider-Li/MathModel-Contest-Flow.git \
+  ~/.workbuddy-ai/skills/math-modeling-pro      # WorkBuddy
+  # 或 ~/.claude/skills/math-modeling-pro        # Claude Code
+
+# 项目级：仅当前项目
+git clone https://github.com/Voider-Li/MathModel-Contest-Flow.git \
+  <你的项目>/.workbuddy-ai/skills/math-modeling-pro
 ```
 
-安装后，只要对话中出现「数学建模 / 数模 / 国赛 / 美赛 / 建模论文 / 数据挖掘 / 独立测试集 / 文献核验」等关键词，agent 即会自动加载本 skill。
+对话里出现「数学建模 / 数模 / 国赛 / 美赛 / 建模论文 / 数据挖掘 / 独立测试集 / 文献核验」等词时，工具会自动加载本 skill。
 
-### 3. 一次竞赛任务的标准推进（11 阶段）
+### 环境依赖
 
-| 阶段 | 内容 | 产物 |
-|---|---|---|
-| 0 环境自检 | 依赖检查、cls 就位、目录骨架 | `logs/env_check.json` |
-| 1 读题拆解 | 题面解析、数据探查、拆题 | `task_package.json` |
-| 2 数据挖掘 | 独立 EDA、特征工程、防泄漏标注 | `Q0_eda/eda.py` + `results/`、`data_mining_summary.md` |
-| 3 方案建模 | 每问 2–3 候选 + 基线，用户点选 | `modeling_doc.json` |
-| 4 代码求解 | 真实数据、防伪红线、增量纠错、数值冻结 | `Q*/solve.py` + `results/`、`frozen_metrics.csv` |
-| 5 独立检验 | 独立测试集、泄露自查、稳健性 | `reports/VALIDATION_REPORT.md` |
-| 6 可视化 | 架构图 1 张 + 各问流程图 + 数据图 | `figures/` |
-| 7 文献库 | 检索、建库、DOI 核验 | `references/library.bib` |
-| 8 论文写作 | 分章节生成 + 编译修复循环 | `main.tex` / `main.pdf` |
-| 9 审稿修改 | 九维评审 + 门禁复检 + 版面体检 | `review_report.json` |
-| 10 交付 | 论文 PDF + 支撑材料 zip | `06_delivery/` |
+- Python ≥ 3.10：`pandas`、`openpyxl`、`matplotlib`、`pdfplumber`
+- 版面体检脚本另需 `pymupdf`
+- TeX Live / CTeX：`xelatex` + `cumcmthesis`（仓库自带离线 `.cls` 兜底）
 
-时间紧只读一个文件的话，读 `references/review.md`。
+## 使用
 
-### 4. 交付前一键体检
+正常做竞赛时，按 `SKILL.md` 的 11 个阶段推进即可，无需手动跑脚本。**交付前**必须跑一次自动体检：
 
 ```bash
-python scripts/check_gates.py <task_dir>                    # 工程结构 + 门禁 G1–G7
-python scripts/check_layout.py main.pdf --tex main.tex      # 版面六项（就近/字数/占比/图挨图/页数/乱码）
+# 门禁自检：目录结构、EDA 与数据挖掘章、基线对比、独立测试集、文献库、数值冻结、可复现
+python scripts/check_gates.py <task_dir>
+
+# 版面体检：单页占比与图挨图、说明文字字数、图表就近、乱码、正文页数
+python scripts/check_layout.py main.pdf --tex main.tex
 ```
 
-两个脚本退出码非 0 即需修复。
+两个脚本**退出码非 0 即表示需要修复**。`check_gates.py` 的 G1 / G4 属启发式判断，会明确标注「需人工复核」，不能完全替代人工。
 
-## 🧭 两类结构图，别画错
+## 两类结构图，别画混
 
-| 类型 | 数量 | 位置 | 画法 |
-|---|---|---|---|
+| 图 | 数量 | 放在哪 | 用什么画 |
+|---|:--:|---|---|
 | 论文总体架构图 | 全篇 1 张 | 问题分析节末尾 | `skills/tikz-architecture-diagram`（分层架构，Okabe-Ito 配色） |
-| 各问解题流程图 | 每问 1 张 | 该问模型建立开头 | `templates/flow_snake.tex`（蛇形横向，现代柔和 6 色） |
+| 各问解题流程图 | 每问 1 张 | 该问「模型建立」开头 | `templates/flow_snake.tex`（蛇形横向，现代柔和 6 色） |
 
-两类图画风不混用。
+判据：表达「全文怎么分层组织」的用架构图；表达「某一问怎么一步步算」的用流程图。两种画风不混用。
 
-## 🔀 与来源 skill 的关系
+## 什么算「做完了」
 
-| | 来源 A（[math-modeling-skill](https://github.com/LEEHAHAHAHA/math-modeling-skill)） | 来源 B（门控工作流） | **本 skill（融合）** |
-|---|---|---|---|
-| 自包含 | ✅ | ❌ 依赖外部技能 | ✅ |
-| 模板/脚本/子技能 | ✅ | ❌ | ✅ |
+不是「论文能编译」就算完，而是下面四条同时成立：
+
+1. `check_gates.py` 退出码 0，八条门禁无红线级、无一致性级问题；
+2. `check_layout.py` 退出码 0，版面六项全过；
+3. 审稿评分表十个维度均 ≥ 4 分；
+4. 支撑材料（代码 / 结果 CSV / README）与论文口径完全一致。
+
+## 与上游的关系
+
+本 skill 由两套来源融合而成，**能力与资源全部保留，方法论硬门禁为新增**：
+
+| | 全流程能力包（上游） | 门控式工作流 | **本 skill** |
+|---|:--:|:--:|:--:|
+| 自包含、无外部依赖 | ✅ | ❌ | ✅ |
+| 模板 / 脚本 / 子技能 | ✅ | ❌ | ✅ |
 | 版面自动机检 | ✅ | ❌ | ✅ |
 | 独立测试集门 | ✖ | ✅ | ✅ |
 | 独立数据挖掘章 | ✖ | ✅ | ✅ |
-| 文献管理门 | ✖ | ✅ | ✅ |
-| 数值冻结 / 决策留痕 | ✖ | ✅ | ✅ |
+| 文献核验门 | ✖ | ✅ | ✅ |
+| 数值冻结 | ✖ | ✅ | ✅ |
 
-融合原则：**能力与资源全部来自 A，方法论硬门禁来自 B，二者互不削弱**。A 的写作/可视化细节与自动化脚本原样保留，B 的门禁改写为 A 的 reference 章节与检查项。
-
-## 🙏 致谢
+## 致谢
 
 本 skill 的**全流程能力底座**借鉴自开源项目 **[LEEHAHAHAHA/math-modeling-skill](https://github.com/LEEHAHAHAHA/math-modeling-skill)**。
 
@@ -136,10 +159,8 @@ python scripts/check_layout.py main.pdf --tex main.tex      # 版面六项（就
 
 本 skill 在其基础上补充了独立数据挖掘章、独立测试集检验、基线对比、文献核验与数值冻结等硬门禁，并继续以 MIT 许可证开源。如果本项目对你有帮助，也请一并给原项目点个 star。
 
-## 📜 许可证
+## 许可证与免责
 
-[MIT](LICENSE)。其中 `templates/cumcmthesis/cumcmthesis.cls` 为 [cumcmthesis](https://github.com/latexstudio/CUMCMThesis)（LaTeX Studio）官方类文件的离线副本，遵循其原有许可证，此处仅作离线兜底，以系统安装版本优先。
+[MIT](LICENSE)。其中 `templates/cumcmthesis/cumcmthesis.cls` 是 [cumcmthesis](https://github.com/latexstudio/CUMCMThesis)（LaTeX Studio）官方类文件的离线副本，遵循其原有许可证，此处仅作离线兜底，实际以系统安装版本优先。
 
-## ⚠️ 免责声明
-
-本仓库是竞赛方法论的标准化沉淀，仅供学习与研究使用。使用 AI 辅助参赛时请遵守目标赛事的官方规则（部分赛事要求披露 AI 工具使用情况）。
+本仓库是竞赛方法论的标准化沉淀，仅供学习与研究使用。用 AI 辅助参赛时请遵守目标赛事的官方规则（部分赛事要求披露 AI 工具使用情况）。

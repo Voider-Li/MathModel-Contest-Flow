@@ -1,0 +1,63 @@
+% 各问求解流程图:蛇形(横向)布局模板 —— 完整可编译示例
+% 用法:复制 \begin{tikzpicture}...\end{tikzpicture} 块到论文对应 \begin{figure}[H] 内,改节点文字即可。
+% 蛇形:第1行 左→右,第2行 右→左折返,第3行 左→右,像波浪(非"糖葫芦"直线)。
+% 配色:现代柔和 6 色(珊瑚红/青绿/天蓝/薄荷绿/暖黄/淡紫),沿蛇形顺序循环取。
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usepackage{graphicx}
+\usepackage{float}   % 提供 [H] 强制就地固定(真实论文模板已含,此处供独立编译)
+\begin{document}
+\thispagestyle{empty}
+\begin{figure}[H]
+  \centering
+  \resizebox{0.92\textwidth}{!}{
+  \begin{tikzpicture}[
+      node/.style={rounded corners=3pt, align=center, font=\footnotesize,
+                   minimum width=2.7cm, minimum height=0.85cm,
+                   text=black!82, draw=#1!60!black, fill=#1!18},
+      cCoral/.style={node={coral}},  % 珊瑚红
+      cTeal/.style={node={teal}},    % 青绿
+      cSky/.style={node={sky}},      % 天蓝
+      cMint/.style={node={mint}},    % 薄荷绿
+      cWarm/.style={node={warm}},    % 暖黄
+      cLilac/.style={node={lilac}},  % 淡紫
+      arr/.style={-{Stealth[length=2.2mm]}, thick, gray!65}
+    ]
+    \definecolor{coral}{RGB}{244,151,142}
+    \definecolor{teal}{RGB}{77,182,172}
+    \definecolor{sky}{RGB}{100,181,246}
+    \definecolor{mint}{RGB}{152,216,200}
+    \definecolor{warm}{RGB}{255,213,158}
+    \definecolor{lilac}{RGB}{197,176,230}
+
+    % 第 1 行 左→右 (y=0)
+    \node[cCoral] (s1) at (-6, 0) {读入数据};
+    \node[cTeal]  (s2) at (-2, 0) {预处理};
+    \node[cSky]   (s3) at ( 2, 0) {建立模型};
+    % 第 2 行 右→左 折返 (y=-2)
+    \node[cMint]  (s4) at ( 2,-2) {求解算法};
+    \node[cWarm]  (s5) at (-2,-2) {灵敏度检验};
+    \node[cLilac] (s6) at (-6,-2) {结果输出};
+    % 第 3 行 左→右 (y=-4,步骤更多时再加)
+    \node[cCoral] (s7) at (-6,-4) {方案评估};
+    \node[cTeal]  (s8) at (-2,-4) {对比基线};
+    \node[cSky]   (s9) at ( 2,-4) {结论};
+
+    % 行内箭头(第2行视觉向左,箭头指向左侧节点)
+    \draw[arr] (s1)--(s2) (s2)--(s3);
+    \draw[arr] (s4)--(s5) (s5)--(s6);
+    \draw[arr] (s7)--(s8) (s8)--(s9);
+    % 行末折返(竖直向下转行)
+    \draw[arr] (s3)--(s4);
+    \draw[arr] (s6)--(s7);
+  \end{tikzpicture}}
+  \caption{问题二:求解流程(蛇形横向)。先由附件读入各场馆容量与场次安排作为
+  输入,经缺失值填补与单位统一形成决策可行域;再以总旅行负担最小为目标建立
+  整数规划模型,约束涵盖容量上限、休息间隔与配额;随后用分支定界求解并以贪心
+  上界加速,迭代 412 次收敛;经 $\pm10\%$ 灵敏度检验稳健后,输出完整赛程方案与
+  目标值 3862 人公里,较基线下降 14.7\%,方案评估与基线对比均验证其优。}
+  \label{fig:p2flow}
+\end{figure}
+\end{document}

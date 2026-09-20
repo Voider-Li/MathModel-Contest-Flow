@@ -1,0 +1,138 @@
+% ============================================================================
+% 学术顶刊风格分层架构图模板(绝对坐标布局,天然杜绝部件互相遮盖)
+% 用途:数学建模论文「总体架构图」(放问题分析节),或系统/平台分层架构图
+% 编译:xelatex fig.tex   (务必 xelatex,不是 pdflatex)
+% 画布:17.2 x 13.8 cm(宽 > 高,期刊整幅友好)
+% 改法:只改「内容区」的标签文字与盒数;坐标已算好,不要动布局常量
+% ============================================================================
+\documentclass[tikz,border=0pt]{standalone}
+
+% ---------- 字体:中文宋体 + 西文 Times 风格,跨平台自动回退 ----------
+\usepackage[fontset=none]{ctex}
+\IfFontExistsTF{SimSun}{\setCJKmainfont{SimSun}}{%
+  \IfFontExistsTF{Songti SC}{\setCJKmainfont{Songti SC}}{%
+    \IfFontExistsTF{Noto Serif CJK SC}{\setCJKmainfont{Noto Serif CJK SC}}{%
+      \setCJKmainfont{FandolSong-Regular}[Extension=.otf]}}}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{%
+  \IfFontExistsTF{Liberation Serif}{\setmainfont{Liberation Serif}}{%
+    \IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{}}}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, calc}
+
+% ---------- 配色:Okabe-Ito 低饱和分层用色,自下而上 冷 -> 暖 ----------
+\definecolor{cL1}{HTML}{56B4E9}   % 天蓝  最下层
+\definecolor{cL2}{HTML}{0072B2}   % 蓝    核心层
+\definecolor{cL3}{HTML}{009E73}   % 青绿
+\definecolor{cL4}{HTML}{E69F00}   % 琥珀
+\definecolor{cL5}{HTML}{CC79A7}   % 洋红  最上层
+\definecolor{cACC}{HTML}{D55E00}  % 朱红  唯一创新亮点强调用
+
+\tikzset{
+  band/.style   ={rounded corners=3pt, line width=0.5pt, draw=#1!45, fill=#1!7},
+  head/.style   ={rounded corners=2pt, line width=0.5pt, draw=#1!60, fill=#1!15},
+  box/.style    ={rounded corners=2pt, line width=0.5pt, draw=black!25, fill=white},
+  boxacc/.style ={rounded corners=2pt, line width=0.6pt, draw=#1!70, fill=#1!14},
+  fwd/.style    ={-{Stealth[length=1.8mm]}, line width=0.6pt, draw=black!35},
+  up/.style     ={-{Stealth[length=2.2mm]}, line width=0.7pt, draw=black!50},
+}
+
+% ---------- 布局宏(坐标全部为 cm 绝对值) ----------
+% \layerband{颜色}{y下}{y上}
+\newcommand{\layerband}[3]{\draw[band=#1] (0.2,#2) rectangle (17.0,#3);}
+
+% \layerhead{颜色}{y中}{层名}{职能副题}   左侧层标块 x in [0.2,3.1],高 1.5
+\newcommand{\layerhead}[4]{%
+  \node[head=#1, minimum width=2.9cm, minimum height=1.5cm] at (1.65,#2) {};
+  \node[font=\small\bfseries, align=center, text width=2.7cm]
+       at ({1.65},{#2+0.30}) {#3};
+  \node[font=\footnotesize, text=black!55, align=center, text width=2.7cm]
+       at ({1.65},{#2-0.34}) {#4};}
+
+% \compbox{样式}{x中}{y中}{宽}{高}{标题}{副题}
+% 铁律:标题一律放 yc+0.28、副题一律放 yc-0.30 —— 同一行标题基线才对齐
+% 注意 text width 是 TeX 长度而非 PGF 表达式,必须用 \dimexpr 求值(写成
+% text width={#4-0.3}cm 会报 Unknown operator `cm')
+\newcommand{\compbox}[7]{%
+  \node[#1, minimum width=#4cm, minimum height=#5cm] at (#2,#3) {};
+  \node[font=\footnotesize\bfseries, align=center,
+        text width=\dimexpr#4cm-0.3cm\relax]
+       at ({#2},{#3+0.28}) {#6};
+  \node[font=\scriptsize, text=black!55, align=center,
+        text width=\dimexpr#4cm-0.3cm\relax]
+       at ({#2},{#3-0.30}) {#7};}
+
+% \upflow{y下}{y上}  层间数据流箭头,统一走 x=10.2(内容区中线)
+\newcommand{\upflow}[2]{\draw[up] (10.2,#1) -- (10.2,#2);}
+
+\begin{document}
+\begin{tikzpicture}
+% 固定画布 17.2 x 13.8,保证输出尺寸稳定
+\useasboundingbox (0,0) rectangle (17.2,13.8);
+
+% ============================================================================
+% 布局常量(改内容时不要动)
+%   层带 x in [0.2,17.0];左侧层标块 x in [0.2,3.1];内容区 x in [3.4,17.0](宽 13.6)
+%   层带 y:L1 0.25-2.45 | L2 2.85-5.85(核心层,加高) | L3 6.25-8.45
+%           L4 8.85-11.05 | L5 11.45-13.55        层间空隙一律 0.40
+%   一行 n 盒:宽 w=(13.6-(n-1)g)/n
+%     n=4,g=0.30 -> w=3.175,中心 x=4.99 / 8.46 / 11.94 / 15.41
+%     n=3,g=0.40 -> w=4.267,中心 x=5.53 / 10.20 / 14.87
+% ============================================================================
+
+% ---------- 第一步:先画所有层带(色块必须先画,文字后画,否则被盖住) ----------
+\layerband{cL1}{0.25}{2.45}
+\layerband{cL2}{2.85}{5.85}
+\layerband{cL3}{6.25}{8.45}
+\layerband{cL4}{8.85}{11.05}
+\layerband{cL5}{11.45}{13.55}
+
+% ---------- 第二步:层标块 + 组件盒(每层自下而上) ----------
+
+% —— L1 数据与题面层(band 0.25-2.45,中心 1.35)——
+\layerhead{cL1}{1.35}{数据与题面层}{输入与预处理}
+\compbox{box}{4.99}{1.35}{3.175}{1.4}{赛题解析}{问题拆解与类型判定}
+\compbox{box}{8.46}{1.35}{3.175}{1.4}{附件数据}{Excel/CSV 结构探查}
+\compbox{box}{11.94}{1.35}{3.175}{1.4}{数据清洗}{缺失、异常、单位统一}
+\compbox{box}{15.41}{1.35}{3.175}{1.4}{特征构建}{派生变量与归一化}
+
+% —— L2 模型构建层(核心层,band 2.85-5.85,中心 4.35)——
+\layerhead{cL2}{4.35}{模型构建层}{机理优先、可解释}
+\compbox{box}{4.99}{4.75}{3.175}{1.35}{问题一模型}{幂律回归}
+\compbox{box}{8.46}{4.75}{3.175}{1.35}{问题二模型}{整数规划}
+\compbox{box}{11.94}{4.75}{3.175}{1.35}{问题三模型}{排队论仿真}
+\compbox{box}{15.41}{4.75}{3.175}{1.35}{问题四模型}{多目标优化}
+% 通栏强调块:全文唯一亮点(此处示例为全问共享的统一符号体系)
+\compbox{boxacc=cACC}{10.2}{3.40}{13.6}{0.80}{统一符号体系与假设集(全问共享)}{}
+
+% —— L3 算法求解层(band 6.25-8.45,中心 7.35),层内流水线 ——
+\layerhead{cL3}{7.35}{算法求解层}{数值实现与检验}
+\compbox{box}{4.99}{7.35}{3.175}{1.4}{参数估计}{最小二乘/极大似然}
+\compbox{box}{8.46}{7.35}{3.175}{1.4}{优化求解}{分支定界/启发式}
+\compbox{box}{11.94}{7.35}{3.175}{1.4}{仿真推演}{蒙特卡洛重复试验}
+\compbox{boxacc=cL3}{15.41}{7.35}{3.175}{1.4}{稳健性检验}{参数扰动与交叉验证}
+% 流水线箭头:上一盒右边缘 -> 下一盒左边缘
+\draw[fwd] (6.575,7.35) -- (6.875,7.35);
+\draw[fwd] (10.05,7.35) -- (10.35,7.35);
+\draw[fwd] (13.525,7.35) -- (13.825,7.35);
+
+% —— L4 结果输出层(band 8.85-11.05,中心 9.95)——
+\layerhead{cL4}{9.95}{结果输出层}{量化结论}
+\compbox{box}{5.53}{9.95}{4.267}{1.4}{关键指标}{$R^2$、目标值、改善率}
+\compbox{box}{10.20}{9.95}{4.267}{1.4}{方案输出}{调度表与分配方案}
+\compbox{box}{14.87}{9.95}{4.267}{1.4}{敏感性分析}{参数扰动区间}
+
+% —— L5 结论与推广层(band 11.45-13.55,中心 12.50)——
+\layerhead{cL5}{12.50}{结论与推广层}{评价与外延}
+\compbox{box}{5.53}{12.50}{4.267}{1.4}{结论汇总}{回答题目全部要求}
+\compbox{box}{10.20}{12.50}{4.267}{1.4}{模型评价}{优点、缺点、改进}
+\compbox{box}{14.87}{12.50}{4.267}{1.4}{推广应用}{同类场景外延}
+
+% ---------- 第三步:层间数据流箭头(自下而上,走每段空隙正中) ----------
+\upflow{2.48}{2.82}
+\upflow{5.88}{6.22}
+\upflow{8.48}{8.82}
+\upflow{11.08}{11.42}
+
+\end{tikzpicture}
+\end{document}

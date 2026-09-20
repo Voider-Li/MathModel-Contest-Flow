@@ -1,7 +1,0 @@
-interface:
-  display_name: "数模混合工作流"
-  short_description: "r1顺序交付 + r0门控质检，强制数值对比、独立数据挖掘与独立测试集检验"
-  default_prompt: "使用 $mathmodel-contest-flow 初始化本次数学建模竞赛：先设置偏好与模式，再按门禁依次完成建模、数据挖掘、独立检验、对比表和论文验收。"
-
-policy:
-  allow_implicit_invocation: true

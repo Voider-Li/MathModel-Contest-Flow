@@ -116,7 +116,7 @@ python scripts/check_layout.py main.pdf --tex main.tex      # 版面六项（就
 
 ## 🔀 与来源 skill 的关系
 
-| | 来源 A（全流程能力包） | 来源 B（门控工作流） | **本 skill（融合）** |
+| | 来源 A（[math-modeling-skill](https://github.com/LEEHAHAHAHA/math-modeling-skill)） | 来源 B（门控工作流） | **本 skill（融合）** |
 |---|---|---|---|
 | 自包含 | ✅ | ❌ 依赖外部技能 | ✅ |
 | 模板/脚本/子技能 | ✅ | ❌ | ✅ |
@@ -127,6 +127,14 @@ python scripts/check_layout.py main.pdf --tex main.tex      # 版面六项（就
 | 数值冻结 / 决策留痕 | ✖ | ✅ | ✅ |
 
 融合原则：**能力与资源全部来自 A，方法论硬门禁来自 B，二者互不削弱**。A 的写作/可视化细节与自动化脚本原样保留，B 的门禁改写为 A 的 reference 章节与检查项。
+
+## 🙏 致谢
+
+本 skill 的**全流程能力底座**借鉴自开源项目 **[LEEHAHAHAHA/math-modeling-skill](https://github.com/LEEHAHAHAHA/math-modeling-skill)**。
+
+读题拆解、建模方案选择、代码实现与增量纠错、可视化规范、论文写作与审稿流程，以及 `cumcmthesis` 离线类文件、TikZ 架构图子技能、`check_layout.py` 版面体检脚本等资源，均来自该项目。在此向原作者 **LEEHAHAHAHA** 及所有贡献者致以诚挚感谢。
+
+本 skill 在其基础上补充了独立数据挖掘章、独立测试集检验、基线对比、文献核验与数值冻结等硬门禁，并继续以 MIT 许可证开源。如果本项目对你有帮助，也请一并给原项目点个 star。
 
 ## 📜 许可证
 

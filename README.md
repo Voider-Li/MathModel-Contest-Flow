@@ -1,4 +1,4 @@
-# Math Modeling Pro
+# MathModel-Contest-Flow
 
 一套自包含的数学建模竞赛 Skill：把「读题 → 交付」的完整流程拆成 **11 个阶段**，并用 **8 条硬门禁**守住质量下限。模板、脚本、子技能全部随包分发，克隆下来即可使用，不依赖任何外部技能。
 
@@ -44,7 +44,7 @@
 ## 目录结构
 
 ```
-math-modeling-pro/
+mathmodel-contest-flow/
 ├── SKILL.md                         # 主入口：核心理念 + 八门禁 + 11 阶段工作流
 ├── references/                      # 分阶段详细规范（9 份）
 │   ├── parsing.md                   #   读题与拆解
@@ -73,12 +73,12 @@ math-modeling-pro/
 ```bash
 # 个人级：所有项目可用
 git clone https://github.com/Voider-Li/MathModel-Contest-Flow.git \
-  ~/.workbuddy-ai/skills/math-modeling-pro      # WorkBuddy
-  # 或 ~/.claude/skills/math-modeling-pro        # Claude Code
+  ~/.workbuddy-ai/skills/mathmodel-contest-flow      # WorkBuddy
+  # 或 ~/.claude/skills/mathmodel-contest-flow        # Claude Code
 
 # 项目级：仅当前项目
 git clone https://github.com/Voider-Li/MathModel-Contest-Flow.git \
-  <你的项目>/.workbuddy-ai/skills/math-modeling-pro
+  <你的项目>/.workbuddy-ai/skills/mathmodel-contest-flow
 ```
 
 对话里出现「数学建模 / 数模 / 国赛 / 美赛 / 建模论文 / 数据挖掘 / 独立测试集 / 文献核验」等词时，工具会自动加载本 Skill。

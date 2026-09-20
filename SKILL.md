@@ -1,5 +1,5 @@
 ---
-name: math-modeling-pro
+name: mathmodel-contest-flow
 description: 数学建模竞赛(国赛/美赛/校赛/企业赛/研究生赛)从读题到论文交付的强化版全流程能力——在标准全流程之上内置硬门禁:读题拆解、独立数据挖掘章、方案选择(大道至简+多候选+基线对比)、模型搭建(机理优先/可解释)、代码实现(防伪数据/Search-Replace 纠错/可复现/数值冻结)、独立测试集检验(含数据泄露自查/失败样本分析)、可视化(三套学术配色+八大绘图类型+宋体Times+TikZ 流程图+论文总体架构图)、文献库建设与核验(真实可查/键值引用)、论文写作(各部分长度/降 AI 率/图表就近/图表说明100–150字/单页图表占比≤2/3/正文21–30页)、审稿与修改(九维评审+三级问题清单+门禁复检+版面逐页视觉审查+乱码复检)、交付。只要用户提到数学建模/数模/建模论文/国赛/美赛/CUMCM/MCM/ICM/建模大赛/读题/建模/求解/数模论文/数学模型/数据挖掘/独立测试集/基线对比/文献核验/论文总体架构图/图表排版/版面审查/图片乱码等,都应使用本 skill,即使没有明说"建模"。适用于从读题、建模仿真到 LaTeX 成稿交付的完整任务,可直接在 Claude Code / Codex / WorkBuddy 等 agentic 编码工具中加载使用。
 ---
 
@@ -203,8 +203,8 @@ description: 数学建模竞赛(国赛/美赛/校赛/企业赛/研究生赛)从�
 ## 在 agentic 编码工具中加载使用
 
 本 skill 目录可直接放入以下位置后即用:
-- **Claude Code**:`~/.claude/skills/math-modeling-pro/`(或项目 `.claude/skills/`)
+- **Claude Code**:`~/.claude/skills/mathmodel-contest-flow/`(或项目 `.claude/skills/`)
 - **Codex / 类似工具**:按其 skill 加载约定放置
-- **WorkBuddy**:`~/.workbuddy-ai/skills/math-modeling-pro/` 或通过 SkillManage 安装
+- **WorkBuddy**:`~/.workbuddy-ai/skills/mathmodel-contest-flow/` 或通过 SkillManage 安装
 
 工具识别到用户意图匹配 `description` 中的触发词时,自动加载本 `SKILL.md`,并按"何时读哪个 reference"表按需读取子文件。每个 reference 都是独立可读的,无需全部加载。

@@ -1,6 +1,6 @@
 # cumcmthesis.cls（离线兜底副本）
 
-本文件夹随 math-modeling-pro 一并提供 **cumcmthesis 文档类** 的离线副本，供论文阶段 0/5 获取后放到论文工作目录编译。
+本文件夹随 mathmodel-contest-flow 一并提供 **cumcmthesis 文档类** 的离线副本，供论文阶段 0/5 获取后放到论文工作目录编译。
 
 ## 来源
 - 文件：`cumcmthesis.cls`

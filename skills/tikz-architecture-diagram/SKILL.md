@@ -7,7 +7,7 @@ description: 学术顶刊风格的系统/平台层级架构图绘制——用 Ti
 
 把"系统自下而上分为 N 层、每层若干模块"这类内容画成学术顶刊风格的矢量架构图。核心是**绝对坐标**布局:层带、层标块、组件盒、箭头全部用 cm 坐标先算好再写,天然杜绝部件互相遮盖;字体按 中文宋体 + 西文 Times 风格,配色用 Okabe-Ito 低饱和分层用色。
 
-本 skill 是 `math-modeling-pro` 的捆绑子 skill,也可独立取出使用(把本目录整体复制到 `~/.claude/skills/tikz-architecture-diagram/` 或 `~/.workbuddy/skills/` 下即可被单独识别)。
+本 skill 是 `mathmodel-contest-flow` 的捆绑子 skill,也可独立取出使用(把本目录整体复制到 `~/.claude/skills/tikz-architecture-diagram/` 或 `~/.workbuddy/skills/` 下即可被单独识别)。
 
 ## 在数学建模论文中的职责边界(重要,别画错图)
 
@@ -16,7 +16,7 @@ description: 学术顶刊风格的系统/平台层级架构图绘制——用 Ti
 | 图 | 数量 | 位置 | 用什么画 |
 |---|---|---|---|
 | **论文总体架构图** | 全文 1 张 | **问题分析节**(第 4 节)末尾 | **本 skill**(分层架构:数据层→模型层→求解层→结果层→结论层) |
-| 各小问求解流程图 | 每问 1 张 | 每问"模型建立与求解"开头 | `math-modeling-pro/references/visualization.md` 第 5.1.1 节的**蛇形(横向)TikZ 流程图模板**(现代柔和 6 色) |
+| 各小问求解流程图 | 每问 1 张 | 每问"模型建立与求解"开头 | `mathmodel-contest-flow/references/visualization.md` 第 5.1.1 节的**蛇形(横向)TikZ 流程图模板**(现代柔和 6 色) |
 
 判据:**表达"全文如何分层组织、各问如何归位"的用本 skill;表达"某一问从输入到输出怎么一步步算"的用原流程图模板。** 总体架构图承载"这篇论文的骨架",放在问题分析节收尾,让评委在读正文前先看懂全局;小问流程图承载"这一问的算法链路",不要用分层架构的形式去画,也不要把总体架构图复制成多张充当流程图。
 
@@ -153,7 +153,7 @@ pdftocairo -svg fig.pdf fig.svg                   # 矢量 SVG
 要点:
 
 - 用 `[H]`(需 `\usepackage{float}`)固定就近,防止架构图漂到别的节去——它必须留在问题分析节。
-- caption 写 **100–150 字**长说明(逐层交代职能 + 层间关系),不写"图1 总体架构图"这种光秃标题。详见 `math-modeling-pro/references/writing.md` 图表说明文字规范。
+- caption 写 **100–150 字**长说明(逐层交代职能 + 层间关系),不写"图1 总体架构图"这种光秃标题。详见 `mathmodel-contest-flow/references/writing.md` 图表说明文字规范。
 - 文件名按详细命名规范:`总体架构图_五层建模框架.pdf`,不用 `arch.pdf`。
 - 正文必须有一句 `\ref{fig:arch}` 引用并点出分层逻辑,不让图自说自话。
 - 图宽 `0.95\textwidth`;因画布宽 > 高,占版面高度约 0.76 倍宽度,配 100–150 字 caption 后单页图表占比仍在 2/3 红线内(见 `writing.md` 单页图表占比规范)。
